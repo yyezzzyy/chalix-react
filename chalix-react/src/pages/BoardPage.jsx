@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/BoardPage.css";
+import PostModal from "../components/\bPostModal";
 
 function BoardPage() {
   const [posts, setPosts] = useState([]);
@@ -96,10 +97,10 @@ function BoardPage() {
           <thead>
             <tr>
               <th>번호</th>
+              <th>학술대회명</th>
               <th>논문명</th>
               <th>카테고리</th>
               <th>구분</th>
-              <th>학술대회명</th>
               <th>등록일</th>
               <th>관리</th>
             </tr>
@@ -108,12 +109,12 @@ function BoardPage() {
             {posts.map((post) => (
               <tr key={post.brd_idx}>
                 <td className="center">{post.brd_idx}</td>
+                <td className="center">{post.brd_ext2}</td>
                 <td className="title" onClick={() => handleRead(post)}>
                   {post.brd_title}
                 </td>
                 <td className="center">{post.brd_category}</td>
                 <td className="center">{post.brd_ext1}</td>
-                <td className="center">{post.brd_ext2}</td>
                 <td className="center">{formatDate(post.reg_datetime)}</td>
                 <td className="center actions">
                   <button onClick={() => handleUpdate(post)}>수정</button>
@@ -135,74 +136,6 @@ function BoardPage() {
           onClose={() => setIsModalOpen(false)}
         />
       )}
-    </div>
-  );
-}
-
-// PostModal 컴포넌트
-function PostModal({ mode, post, onSave, onClose }) {
-  const [formData, setFormData] = useState(post);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(formData);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <h3>
-          {mode === "create"
-            ? "새 글 작성"
-            : mode === "read"
-            ? "글 보기"
-            : "글 수정"}
-        </h3>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="brd_title"
-            value={formData.brd_title}
-            onChange={handleChange}
-            placeholder="제목"
-            readOnly={mode === "read"}
-          />
-          <input
-            type="text"
-            name="brd_category"
-            value={formData.brd_category}
-            onChange={handleChange}
-            placeholder="카테고리"
-            readOnly={mode === "read"}
-          />
-          <input
-            type="text"
-            name="brd_ext1"
-            value={formData.brd_ext1}
-            onChange={handleChange}
-            placeholder="구분"
-            readOnly={mode === "read"}
-          />
-          <input
-            type="text"
-            name="brd_ext2"
-            value={formData.brd_ext2}
-            onChange={handleChange}
-            placeholder="발행처"
-            readOnly={mode === "read"}
-          />
-
-          {mode !== "read" && <button type="submit">저장</button>}
-          <button type="button" onClick={onClose}>
-            닫기
-          </button>
-        </form>
-      </div>
     </div>
   );
 }
